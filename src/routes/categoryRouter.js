@@ -6,6 +6,6 @@ import categoriesValidate from "../middlewares/categoriesValidate.js";
 const categoryRouter = Router();
 
 categoryRouter.get('/categories', getCaterogies);
-categoryRouter.post('/categories', categoriesValidate,generateCategory);
+categoryRouter.post('/categories', categoriesValidate, generateCategory);
 
 export default categoryRouter;
