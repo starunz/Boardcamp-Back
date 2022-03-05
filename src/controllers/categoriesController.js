@@ -10,3 +10,24 @@ export async function getCaterogies(req, res) {
     res.status(500).send(error);
   }
 }
+
+export async function generateCategory(req, res) {
+  const { name } = req.body;
+
+  try {
+
+    const result = await db.query(
+      `SELECT * FROM categories WHERE name=$1`
+    , [name]);
+
+    if (result.rows.length > 0) res.status(409).send('categoria já cadastrada');
+
+    await db.query(
+      `INSERT INTO categories (name) VALUES ($1)`
+    , [name]);
+
+    res.sendStatus(201)
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
