@@ -10,13 +10,16 @@ export async function getGames(req, res) {
         JOIN categories 
         ON games."categoryId" = categories.id
     `
-
+    let params = [];
+    
     try {
   
         if (name) {
+            params.push(`${name}%`);
+
             const resultName = await db.query(
                 query += `WHERE (games.name) ILIKE ($1)`
-                , [`${name}%`]);
+            , params);
 
             return res.send(resultName.rows);
         }
