@@ -22,6 +22,12 @@ export async function postCustomers(req, res) {
 
     try {
 
+        const resultCpf = await db.query(
+            `SELECT * FROM customers WHERE cpf=$1`
+        , [cpf]);
+
+        if(resultCpf.rowCount > 0) return res.sendStatus(409);
+
         await db.query(
             `INSERT INTO customers 
             (name, phone, cpf, birthday)
