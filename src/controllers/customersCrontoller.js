@@ -3,10 +3,17 @@ import db from '../db.js';
 export async function getCustomers(req, res) {
     const { cpf } = req.query;
     
-    let query = `SELECT * FROM customers`
+    let query = `SELECT * FROM customers `
+    let params = [];
 
     try {
         
+        if(cpf) {
+            params.push(`${cpf}%`);
+
+            query += `WHERE cpf ILIKE $1`
+        }
+
         const result = await db.query(`${query}`, params);
             
         res.send(result.rows);
