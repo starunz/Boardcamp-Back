@@ -1,9 +1,23 @@
 import db from '../db.js';
 
 export async function getGames(req, res) {
+    const { name } = req.query;
 
     try {
   
+        if (name) {
+            const resultName = await db.query(
+                `SELECT games.*, 
+                    categories.name AS "categoryName" 
+                    FROM games 
+                    JOIN categories 
+                    ON games."categoryId" = categories.id 
+                    WHERE (games.name) ILIKE ($1)`
+                , [`${name}%`]);
+
+            return res.send(resultName.rows);
+        }
+
         const result = await db.query (
             `SELECT games.*, 
              categories.name AS "categoryName" 
