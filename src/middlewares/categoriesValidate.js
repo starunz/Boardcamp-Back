@@ -8,5 +8,6 @@ export default function categoriesValidate(req, res, next) {
   
       return res.status(400).send(errors);
     }
+
     next();
 }
