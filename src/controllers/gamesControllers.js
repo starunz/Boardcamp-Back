@@ -24,6 +24,18 @@ export async function generateGames(req, res) {
   
     try {
 
+        const resultCategoryId = await db.query(
+            `SELECT * FROM categories WHERE id=$1`
+        , [categoryId]);
+
+        if(resultCategoryId.rowCount === 0) return res.sendStatus(400);
+        
+        const resultName = await db.query(
+            `SELECT * FROM games WHERE name=$1`
+        , [name]);
+
+        if(resultName.rowCount > 0) return res.sendStatus(409);
+
         await db.query(
             `INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") 
                 VALUES ($1, $2, $3, $4, $5);`
