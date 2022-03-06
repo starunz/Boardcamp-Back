@@ -17,14 +17,10 @@ export async function getGames(req, res) {
         if (name) {
             params.push(`${name}%`);
 
-            const resultName = await db.query(
-                query += `WHERE (games.name) ILIKE ($1)`
-            , params);
-
-            return res.send(resultName.rows);
+            query += `WHERE (games.name) ILIKE ($1)`
         }
 
-        const result = await db.query(`${query}`);
+        const result = await db.query(`${query}`, params);
         
         res.send(result.rows);
     } catch (error) {
