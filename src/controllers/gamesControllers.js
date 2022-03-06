@@ -1,14 +1,35 @@
 import db from '../db.js';
 
 export async function getGames(req, res) {
+    const { name } = req.query;
 
+    let query = `
+        SELECT games.*, 
+        categories.name AS "categoryName" 
+        FROM games 
+        JOIN categories 
+        ON games."categoryId" = categories.id
+    `
+    let params = [];
+    
     try {
   
-      const result = await db.query(`SELECT * FROM games`);
-      
-      res.send(result.rows);
+        if (name) {
+            params.push(`${name}%`);
+
+            const resultName = await db.query(
+                query += `WHERE (games.name) ILIKE ($1)`
+            , params);
+
+            return res.send(resultName.rows);
+        }
+
+        const result = await db.query(`${query}`);
+        
+        res.send(result.rows);
     } catch (error) {
       res.status(500).send(error);
+      console.log(error)
     }
 }
 
