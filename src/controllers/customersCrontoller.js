@@ -66,3 +66,30 @@ export async function postCustomers(req, res) {
         res.status(500).send(error)
     }
 }
+
+export async function putCustomer(req, res) {
+    const {
+        name,
+        phone,
+        cpf,
+        birthday
+    } = req.body;
+
+    const { id } = req.params;
+
+    let query =  `SELECT * FROM customers `
+
+    try {
+
+        const resultCustomer = await db.query(
+            query += `WHERE id=$1`
+        , [id]);
+
+        console.log(resultCustomer);
+        res.send(resultCustomer.rows)
+        
+    } catch (error) {
+        res.status(500).send(error);
+    }
+
+}
