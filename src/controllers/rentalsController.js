@@ -28,9 +28,20 @@ export async function postRentals(req, res) {
         ,[gameId]);
 
         if(resultRentals.rowCount >= resultGame.rows[0].stockTotal) {
-            return res.sendStatus(400);
+            return res.status(400);
         }
-        
+
+        const originalPrice = resultGame.rows[0].pricePerDay * daysRented;
+
+        await db.query(
+            `INSERT INTO rentals
+             ("customerId", "gameId", "rentDate", 
+             "daysRented", "returnDate", 
+             "originalPrice", "delayFee")
+             VALUES 
+             ($1, $2, NOW(), $3, NULL, $4, NULL )`
+        ,[customerId, gameId, daysRented, originalPrice]);
+
         res.sendStatus(201);
     } catch (error) {
         res.status(500).send(error);
