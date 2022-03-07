@@ -1,8 +1,13 @@
 import { Router } from "express";
 
-import { postCustomers, getCustomers, getCustomer, putCustomer } from "../controllers/customersCrontoller.js";
+import { 
+    postCustomers, 
+    getCustomers, 
+    getCustomer, 
+    putCustomer 
+} from "../controllers/customersCrontoller.js";
 
-import { customersValidate } from "../middlewares/validateCustomers.js";
+import customersValidate from "../middlewares/validateCustomers.js";
 
 const customersRouter = Router()
 

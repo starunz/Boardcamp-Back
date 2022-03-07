@@ -1,4 +1,4 @@
-import { customersSchema} from "../schemas/customersSchema.js";
+import customersSchema from "../schemas/customersSchema.js";
 
 function customersValidate(req, res, next) {
   const validation = customersSchema.validate(req.body, { abortEarly: false });
@@ -16,6 +16,4 @@ function customersValidate(req, res, next) {
   next();
 }
 
-export {
-  customersValidate
-}
+export default customersValidate;
