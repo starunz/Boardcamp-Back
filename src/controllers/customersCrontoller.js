@@ -31,9 +31,11 @@ export async function getCustomer(req, res) {
             SELECT * FROM customers WHERE id=$1`
         , [id]);
 
+        console.log(resultCustomer)
+
         if(resultCustomer.rowCount === 0) return res.sendStatus(404);
         
-        res.send(resultCustomer.rows);
+        res.send(resultCustomer.rows[0]);
     } catch (error) {
         res.status(500).send(error)
     }
@@ -84,12 +86,21 @@ export async function putCustomer(req, res) {
         const resultCustomer = await db.query(
             query += `WHERE id=$1`
         , [id]);
-
-        console.log(resultCustomer);
-        res.send(resultCustomer.rows)
         
+        if(resultCustomer.rows[0].cpf === cpf) {
+            return res.sendStatus(409);
+        }
+
+        await db.query(
+            `UPDATE customers
+             SET name=$1, phone=$2, cpf=$3, birthday=$4
+                WHERE id=$5`
+        , [name, phone, cpf, birthday, id]);
+
+
+        res.sendStatus(200);
     } catch (error) {
         res.status(500).send(error);
+        console.log(error)
     }
-
 }
