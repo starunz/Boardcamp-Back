@@ -97,6 +97,23 @@ export async function returnRental(req, res) {
         res.sendStatus(200);
     } catch (error) {
         res.status(500).send(error);
+    }
+}
+
+export async function deleteRental(req, res) {
+    const { id } = req. params;
+
+    try {
+
+        const resultRental = await db.query(
+            `SELECT * FROM rentals 
+             WHERE id = $1`
+        , [id]);
+
+        if (resultRental.rowCount === 0) return res.sendStatus(404);
+        
+    } catch (error) {
+        res.status(500).send(error);
         console.log(error)
     }
 }
