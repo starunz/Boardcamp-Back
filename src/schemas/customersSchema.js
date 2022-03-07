@@ -7,6 +7,4 @@ const customersSchema = joi.object({
     birthday: joi.date().iso().required()
 });
 
-export {
-    customersSchema,
-}
+export default customersSchema;

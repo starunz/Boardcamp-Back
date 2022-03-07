@@ -1,6 +1,11 @@
 import { Router } from "express";
 
-import { postRentals, returnRental, getRentals, deleteRental } from "../controllers/rentalsController.js";
+import { 
+    postRentals, 
+    returnRental, 
+    getRentals, 
+    deleteRental 
+} from "../controllers/rentalsController.js";
 
 import rentalValidate from "../middlewares/validateRental.js";
 

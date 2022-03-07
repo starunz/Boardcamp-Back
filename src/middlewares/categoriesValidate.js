@@ -1,6 +1,6 @@
 import categoySchema from "../schemas/categorySchema.js";
 
-export default function categoriesValidate(req, res, next) {
+function categoriesValidate(req, res, next) {
     const validation = categoySchema.validate(req.body, { abortEarly: false });
 
     if (validation.error) {
@@ -11,3 +11,5 @@ export default function categoriesValidate(req, res, next) {
 
     next();
 }
+
+export default categoriesValidate;

@@ -1,6 +1,9 @@
 import { Router } from "express";
 
-import { getCaterogies, generateCategory } from "../controllers/categoriesController.js";
+import { 
+    getCaterogies, 
+    generateCategory 
+} from "../controllers/categoriesController.js";
 
 import categoriesValidate from "../middlewares/categoriesValidate.js";
 
