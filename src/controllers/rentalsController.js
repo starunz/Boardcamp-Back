@@ -21,6 +21,16 @@ export async function postRentals(req, res) {
 
         if (resultGame.rowCount === 0) return res.sendStatus(400);
 
+        const resultRentals = await db.query(
+            `SELECT * FROM rentals 
+             WHERE "gameId"=$1
+             AND "returnDate" IS NULL`
+        ,[gameId]);
+
+        if(resultRentals.rowCount >= resultGame.rows[0].stockTotal) {
+            return res.sendStatus(400);
+        }
+        
         res.sendStatus(201);
     } catch (error) {
         res.status(500).send(error);
