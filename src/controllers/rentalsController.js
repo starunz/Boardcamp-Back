@@ -1,5 +1,15 @@
 import db from '../db.js';
 
+export async function getRentals(req, res) {
+    try {
+
+        const result = await db.query(`SELECT * FROM rentals`)
+        res.send(result.rows)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
 export async function postRentals(req, res) {
     const {
         customerId,
@@ -46,5 +56,30 @@ export async function postRentals(req, res) {
     } catch (error) {
         res.status(500).send(error);
         console.log(error);
+    }
+}
+
+export async function returnRental(req, res) {
+    const { id } = req.params;
+
+    const returnDate = new Date().toISOString().split("T")[0];
+    console.log(returnDate)
+
+    try {
+
+        const resultRental = await db.query(
+            `SELECT * FROM rentals 
+            WHERE id = $1`
+        , [id]);
+
+        console.log(resultRental);
+        if (resultRental.rowCount === 0) return res.sendStatus(404);
+
+        if (resultRental.rows[0].returnDate !== null) return res.status(400).send("Locação já finalizada.");
+
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send(error);
+        console.log(error)
     }
 }
