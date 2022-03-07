@@ -63,7 +63,7 @@ export async function returnRental(req, res) {
     const { id } = req.params;
 
     const returnDate = new Date().toISOString().split("T")[0];
-    console.log(returnDate)
+    let delay = 0;
 
     try {
 
@@ -72,10 +72,27 @@ export async function returnRental(req, res) {
             WHERE id = $1`
         , [id]);
 
-        console.log(resultRental);
         if (resultRental.rowCount === 0) return res.sendStatus(404);
 
-        if (resultRental.rows[0].returnDate !== null) return res.status(400).send("Locação já finalizada.");
+        if (resultRental.rows[0].returnDate !== null) return res.sendStatus(400);
+
+        const resultGame = await db.query(
+            `SELECT * FROM games 
+            WHERE id = $1;`
+        , [resultRental.rows[0].gameId]);
+
+        if(new Date(returnDate).getTime < new Date()) {
+
+            delay = (new Date(returnDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24) * resultGame.rows[0].pricePerDay;
+        }
+
+        await db.query(
+            `UPDATE rentals
+             SET
+             "returnDate" = $1,
+             "delay" = $2
+             WHERE id = $3;`
+        , [returnDate, delay, id]);
 
         res.sendStatus(200);
     } catch (error) {
