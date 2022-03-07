@@ -31,8 +31,6 @@ export async function getCustomer(req, res) {
             SELECT * FROM customers WHERE id=$1`
         , [id]);
 
-        console.log(resultCustomer)
-
         if(resultCustomer.rowCount === 0) return res.sendStatus(404);
         
         res.send(resultCustomer.rows[0]);
@@ -101,6 +99,5 @@ export async function putCustomer(req, res) {
         res.sendStatus(200);
     } catch (error) {
         res.status(500).send(error);
-        console.log(error)
     }
 }

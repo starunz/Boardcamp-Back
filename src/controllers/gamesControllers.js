@@ -25,7 +25,6 @@ export async function getGames(req, res) {
         res.send(result.rows);
     } catch (error) {
       res.status(500).send(error);
-      console.log(error)
     }
 }
 

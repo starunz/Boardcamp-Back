@@ -1,10 +1,63 @@
 import db from '../db.js';
 
 export async function getRentals(req, res) {
+    const date = new Date().toISOString().split("T")[0];
+
     try {
 
-        const result = await db.query(`SELECT * FROM rentals`)
-        res.send(result.rows)
+        const result = await db.query(
+           `SELECT rentals.*, 
+            customers.id AS "customerId", 
+            customers.name AS "customerName",
+            games.id AS "gameId",
+            games.name AS "gameName",
+            games."categoryId",
+            categories.name AS "categoryName"
+            FROM rentals 
+            JOIN customers ON customers.id=rentals."customerId"
+            JOIN games ON games.id=rentals."gameId"
+            JOIN categories ON categories.id=games."categoryId"
+        `);
+        
+        const rentals =  result.rows.map((infosRentals) => {
+            const {
+              id,
+              customerId,
+              gameId,
+              rentDate,
+              daysRented,
+              returnDate,
+              originalPrice,
+              delayFee,
+              customerName,
+              gameName,
+              categoryId,
+              categoryName,
+            } = infosRentals;
+    
+            return {
+              id,
+              customerId,
+              gameId,
+              rentDate: date,
+              daysRented,
+              returnDate: returnDate ? date: null,
+              originalPrice,
+              delayFee,
+              customer: {
+                id: customerId,
+                name: customerName,
+              },
+              game: {
+                id: gameId,
+                name: gameName,
+                categoryId,
+                categoryName,
+              },
+            };
+        });
+
+        res.send(rentals);
     } catch (error) {
         res.status(500).send(error)
     }
@@ -55,7 +108,6 @@ export async function postRentals(req, res) {
         res.sendStatus(201);
     } catch (error) {
         res.status(500).send(error);
-        console.log(error);
     }
 }
 
@@ -122,6 +174,5 @@ export async function deleteRental(req, res) {
         res.sendStatus(200);
     } catch (error) {
         res.status(500).send(error);
-        console.log(error)
     }
 }
